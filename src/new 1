@@ -1,0 +1,59 @@
+
+var test = "steam"
+var obj = {};
+function add(name,location){
+	obj[name] = {
+					name: name,location: location ,
+				}
+}
+var txt
+function myFunction() {
+  
+  var person = prompt("Please enter your name:", "Harry Potter");
+  if (person == null || person == "") {
+    txt = "";
+  } else {
+    txt = person
+  }
+  console.log(txt);
+}
+myFunction()
+add("steam",txt)
+add("test","test")
+
+
+function send(){
+	$.post( "/testt.txt", JSON.stringify(obj, null, 2) );
+}
+var test = JSON.parse(JSON.stringify(obj));
+
+
+
+function add(name,location){
+	data[name] = {
+					name: name,location: location
+				}
+}
+add("adadwadw","daawddwa")
+
+
+
+System.out.println(jsonObject.size());
+			JSONObject jsonObjectN = (JSONObject) jsonObject.get(1);
+			System.out.println(jsonObjectN.get("name"));
+                        System.out.println(jsonObjectN.get("location"));
+						
+						
+						
+ for (int i = 0;i<list.length;i++){
+            try {
+                server.removeContext("/" + list[i]);
+                System.out.println(list[i]);
+            } catch (Exception ex) {
+        }	
+
+
+
+	<input type="submit" value="Submit" onclick="foo(add)">
+	<input type="submit" value="deleteAll" onclick="foo(deleteAll)">
+	<input type="submit" value="clear" onclick="clearA()">		

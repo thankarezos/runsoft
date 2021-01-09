@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.buttons {
+  line-height: 200px;
+  height: 200px;
+  width: 200px;
+  text-align: center;
+  float:left; 
+  margin-left: 20px;
+  margin-top: 20px;
+  background: #752D2D; 
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+}
+.buttons:hover{
+	background: #744E4E;
+}
+body{
+	background: #343434;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+.context-menu { 
+        position: absolute; 
+        text-align: center; 
+        background: #BB3E3E; 
+    } 
+  
+    .context-menu ul { 
+        padding: 0px; 
+        margin: 0px; 
+        min-width: 150px; 
+        list-style: none; 
+    } 
+  
+    .context-menu ul li { 
+        padding-bottom: 7px; 
+        padding-top: 7px; 
+        border: 1px solid #CA7474; 
+    } 
+  
+    .context-menu ul li a { 
+        text-decoration: none; 
+		font-size: 20px;
+        color: white; 
+    } 
+  
+    .context-menu ul li:hover { 
+        background: #813131; 
+    } 
+.input {
+		width: 350px;
+		height: 250px;
+		scale: 50%;
+		border-radius: 25px;
+		background: #470E03;
+		 position: fixed;
+		  top: 50%;
+		  left: 50%;
+		  /* bring your own prefixes */
+		  transform: translate(-50%, -50%);}
+@media only screen and (max-width: 768px) {
+  .input {
+    width: 70%;
+	height: 40%;
+  }
+  .buttons {
+	width: 300px;
+	height: 300px;
+	line-height: 300px;
+	float: none;
+	margin: 0 auto;
+	margin-top: 40px;
+	margin-bottom: 40px;
+}
+	
+  .items {
+		position: relative;
+  }
+}
+.inputbox {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid black;
+  border-radius: 4px;
+  resize: vertical;
+  color: white;
+  background: #330C04; 
+  
+}
+.submitbox {
+  background-color: #494949;
+  border: none;
+  color: white;
+  padding: 8px 25px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+#dimScreen
+{
+    position:fixed;
+    padding:0;
+    margin:0;
+
+    top:0;
+    left:0;
+
+    width: 100%;
+    height: 100%;
+    background:black;
+	opacity: 0.9;
+}
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+
+
+
+
+
+document.onclick = hideMenu; 
+function hideMenu() { 
+        document.getElementById("contextMenu") 
+                .style.display = "none" 
+}
+    
+      
+     
+  
+    function rightClick(e) { 
+        e.preventDefault(); 
+        if (document.getElementById("contextMenu") 
+                .style.display == "block") 
+            hideMenu(); 
+        else{ 
+            var menu = document.getElementById("contextMenu") 
+  
+            menu.style.display = 'block'; 
+            menu.style.left = e.pageX + "px"; 
+            menu.style.top = e.pageY + "px"; 
+			
+        } 
+		var del = document.getElementById("del")
+		del.onclick = function() { foo(deleteS,e.target.id); }
+    } 
+
+
+var user = "user"
+var pass = "pass3"
+var dataC = {};
+
+
+foo(myFunction)
+function myFunction(result) {
+	var json = JSON.parse(result)
+	var jsonKeys = Object.keys(json)
+	var items = document.getElementById("items");
+	
+	
+	var add = document.getElementById("add")
+	clearA()
+	var i;
+	for (i = 0; i < jsonKeys.length; i++) {
+		var btn = document.createElement("DIV");
+		//console.log(jsonKeys[i]);
+		btn.innerHTML = jsonKeys[i]
+		btn.setAttribute("id", jsonKeys[i]);
+
+		btn.setAttribute("class", "buttons noselect");
+		btn.onclick = function() { run(this.id); }
+		btn.oncontextmenu = rightClick; 
+		btn.addEventListener('contextmenu', e => {
+			e.preventDefault();
+			//var r = confirm("Are you sure")
+			//if (r == true){	
+			//	foo(deleteS,btn.id)
+			//}
+		});
+		items.appendChild(btn)
+	}
+	var addbtn = document.createElement("DIV");
+	addbtn.innerHTML = '<img src="/plus.png"></img>'
+	addbtn.setAttribute("class", "buttons");
+	addbtn.setAttribute("style", "background: gray;");
+	addbtn.onclick = function() { show(); }
+	 items.appendChild(addbtn)
+	
+}
+function save(){
+		var name = document.getElementById("name").value
+		var loc = document.getElementById("loc").value
+		if (name && loc){
+			if (isASCII(name) && isASCII(loc)){
+				foo(add)
+				hide()
+				document.getElementById("error").innerHTML = ""
+			}
+			else{
+				document.getElementById("error").innerHTML = "Invalid Characters"
+			}
+		}
+		else{
+			document.getElementById("error").innerHTML = "Fields are empty"
+		}
+}
+
+function clearA(){
+	console.log("test")
+	items.innerHTML = ' ';
+	document.body.appendChild(items)
+}
+
+function run(name){
+	console.log(name)
+	
+	$.ajax({
+			url: "/" + name,
+			method: "POST",
+			dataType: "json",
+			crossDomain: true,
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(dataC, null, 2),
+			cache: false,
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
+			},
+			success: function (data) {
+
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+
+			}
+		});
+}
+
+//function setNL(n,l){
+//	name = n
+//	loc=l
+//	console.log(name,loc)
+//}
+function foo(callback,name) {
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.onload = function(){ // when the request is loaded
+       callback(httpRequest.responseText,name);// we're calling our method
+    };
+    httpRequest.open('GET', "/data.json");
+	httpRequest.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + pass) ); 
+    httpRequest.send();
+	
+}
+
+function isASCII(str) {
+    return /^[\x00-\x7F]*$/.test(str);
+}
+
+function add(result) {
+			var name = document.getElementById("name").value
+			var loc = document.getElementById("loc").value
+			if (result != ""){
+				dataC = JSON.parse(result)
+			}
+			if(typeof name !== "undefined")
+			{
+				dataC[name] = {
+
+								name: name,location: loc ,
+							}
+			}
+			//console.log(dataC)
+			
+			
+			$.ajax({
+				url: "/send",
+				method: "POST",
+				dataType: "json",
+				crossDomain: true,
+				contentType: "application/json; charset=utf-8",
+				data: JSON.stringify(dataC, null, 2),
+				cache: false,
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
+				},
+				success: function (data) {
+
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+
+				}
+			});
+			foo(myFunction)
+}
+function deleteS(result,name) {
+	console.log(name);
+    dataC = JSON.parse(result)
+	delete dataC[name]
+	$.ajax({
+		url: "/send",
+		method: "POST",
+		dataType: "json",
+		crossDomain: true,
+		contentType: "application/json; charset=utf-8",
+		data: JSON.stringify(dataC, null, 2),
+		cache: false,
+		beforeSend: function (xhr) {
+			xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
+		},
+		success: function (data) {
+
+		},
+		error: function (jqXHR, textStatus, errorThrown) {
+
+		}
+		
+	});
+	foo(myFunction)
+}
+function deleteAll(result) {
+	var r = confirm("Are you sure")
+	if (r == true){	
+
+		dataC = {};
+		console.log(dataC)
+		$.ajax({
+			url: "/send",
+			method: "POST",
+			dataType: "json",
+			crossDomain: true,
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(dataC, null, 2),
+			cache: false,
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
+			},
+			success: function (data) {
+
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+
+			}
+			
+		});
+		foo(myFunction)
+	}
+}
+
+function hide(){
+	document.getElementById("screen").style.display = "none"
+	document.getElementById("error").innerHTML = ""
+}
+
+function show(){
+		
+	document.getElementById("screen").style.display = "block"
+	var name = document.getElementById("name");
+	name.addEventListener("keyup", e => {
+		if (event.keyCode === 13) {
+			console.log("test")
+			document.getElementById("save").click();
+		}
+	});
+	var loc = document.getElementById("loc");
+	loc.addEventListener("keyup", e => {
+		if (event.keyCode === 13) {
+			console.log("test")
+			document.getElementById("save").click();
+		}
+	});
+
+}
+
+</script>
+
+</head>
+<body>
+<button onclick="foo(deleteAll)">delete ALL</button>
+
+<div id="contextMenu" class="context-menu" 
+    style="display: none;position:absolute;z-index:500"> 
+    <ul> 
+        <li id="del"><a  href="#">Delete</a></li> 
+        <li><a id="Edit" href="#">Edit</a></li> 
+    </ul> 
+</div > 
+
+<div id="screen" style="display: none;position:absolute;z-index:1000">
+	<div id="dimScreen"></div>
+	<div id="input" class="input"> 
+		
+		<div style="width: 50%;margin: 0 auto;margin-top: 7%;"><p id="error" style="text-align: center;color: red;"></p></div>
+		<div style="position: fixed;top: 20%;left: 10%; width:70%">
+			<label for="name" style="color:white;">Name</label>
+			<input type="text" id="name" class="inputbox" name="lname" >
+		</div>
+		<div style="position: fixed;top: 50%;left: 10% ;width:70%">
+			<label for="loc" style="color:white;">Location</label>
+			<input type="text" id="loc" class="inputbox" name="lname" >
+		</div>
+		<input id="save" type="submit" value="Save" class="submitbox" style="position: fixed;top: 80%;left: 15%" onclick="save()">
+		<input type="submit" value="Cancel" class="submitbox" style="position: fixed;top: 80%;left: 53%" onclick="hide()">
+	</div> 
+</div>
+<div id="items" class="items">
+</div>
+</body>
+</html>
