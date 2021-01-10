@@ -22,7 +22,6 @@ public class handler implements HttpHandler{
         public void handle(HttpExchange t) throws IOException {
             String response = "This is the response";
             System.out.println(name);
-            System.out.println(location);
             t.sendResponseHeaders(200, response.length());
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());

@@ -42,58 +42,54 @@ import com.google.gson.stream.JsonReader;
 import java.nio.file.Paths;
 import org.apache.commons.io.FilenameUtils;
 public class Runsoft {
-
+    
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
         
-        String user = "user";
-        String pass = "pass3";
-        HttpServer server = server(8000,user,pass);
+
+        HttpServer server = server(8000,userpass.getUser(),userpass.getPass());
         HttpContext jsonf = server.createContext("/data.json", new json.jsonhand());
+        HttpContext login = server.createContext("/login", new json.jsonhand());
         HttpContext plus = server.createContext("/plus.ico", new images("src/plus.ico"));
         
         jsonf.setAuthenticator(new BasicAuthenticator("get") {
             @Override
             public boolean checkCredentials(String user, String pwd) {
-                return user.equals(user) && pwd.equals(pass);
+                return user.equals(user) && pwd.equals(userpass.getPass());
             }
         });
         String[] list = new String[100];
         create(server,list);
         HttpContext send = server.createContext("/send", new jsonwrite.jsonhand(server,list));
+        
+        
         send.setAuthenticator(new BasicAuthenticator("get") {
             @Override
             public boolean checkCredentials(String user, String pwd) {
-                return user.equals(user) && pwd.equals(pass);
+                return user.equals(userpass.getUser()) && pwd.equals(userpass.getPass());
             }
         });for (int i = 0;i<list.length;i++){
             try {
                 if (list[i] != null ){
-                        System.out.println(list[i]);
+                        
                 }
             } catch (Exception ex) {
             }
         }
-        File folder = new File("src/images");
-        File[] listOfFiles = folder.listFiles();
-        
-        for (int i = 0; i < listOfFiles.length; i++) {
-          if (listOfFiles[i].isFile()) {
-            String fileNameWithOutExt = FilenameUtils.removeExtension(listOfFiles[i].getName());
-            System.out.println(fileNameWithOutExt);
-            
-            HttpContext image = server.createContext("/" + fileNameWithOutExt + "img", new images("src/images/" + listOfFiles[i].getName()));
-          } else if (listOfFiles[i].isDirectory()) {
-            System.out.println("Directory " + listOfFiles[i].getName());
-            
-          }
+        reload.images(server);
+        Scanner myObj = new Scanner(System.in);
+        System.out.println(getIp.ip());
+       for (;;) {
+        String reloadS = myObj.nextLine();
+        System.out.println(reloadS);
+        if(reloadS.equals("r")){
+            System.out.println("reload");
+            reload.images(server);
         }
-        
-
-        
-        
+       }
     }
     public static void create(HttpServer server,String[] list){
          for (int i = 0;i<list.length;i++){
@@ -132,7 +128,7 @@ public class Runsoft {
                 } catch (Exception ex) {
                 }
                 
-                softweres[id] = new software(locS,nameS,server);
+                softweres[id] = new software(locS,nameS,userpass.getUser(),userpass.getPass(),server);
                 id++;
             }
             // close reader
@@ -150,7 +146,7 @@ public class Runsoft {
     public static HttpServer server(int p,String user,String pass) throws IOException{
         HttpServer server = HttpServer.create(new InetSocketAddress(p), 0);
         server.setExecutor(null); // creates a default executor
-        HttpContext ctx = server.createContext("/", new RootHandler());
+        HttpContext ctx = server.createContext("/", new RootHandler(server));
         
         ctx.setAuthenticator(new BasicAuthenticator("get") {
             @Override
@@ -166,7 +162,7 @@ public class Runsoft {
     public static HttpServer server(int p) throws IOException{
         HttpServer server = HttpServer.create(new InetSocketAddress(p), 0);
         server.setExecutor(null); // creates a default executor
-        HttpContext ctx = server.createContext("/dwadwadw", new RootHandler());
+        HttpContext ctx = server.createContext("/dwadwadw", new RootHandler(server));
         server.start();
         
         return server;
@@ -174,7 +170,12 @@ public class Runsoft {
     
     
     static class RootHandler implements HttpHandler {
-
+        HttpServer server;
+        
+        RootHandler(HttpServer s){
+            server = s;
+            
+        }
         @Override
         public void handle(HttpExchange he) throws IOException {
             
@@ -191,6 +192,9 @@ public class Runsoft {
                 System.out.println("An error occurred.");
                 e.printStackTrace();
               }
+            
+            reload.images(server);
+            
             
             String response = html;
             he.sendResponseHeaders(200, response.length());

@@ -172,7 +172,7 @@ body{
 
 
 var user = "user"
-var pass = "pass3"
+var pass = "pass4"
 var dataC = {};
 
 document.onclick = hideMenu; 
@@ -211,10 +211,10 @@ function detect() {
 	for (i = 1; i < items.childNodes.length - 1; i++) {
 		var image = new Image();
 		image.name= i
-		image.src = items.childNodes[i].id + "img";
+		image.src =  "img" + items.childNodes[i].id + ".png" ;
 		image.onload = function() {
 			console.log(items.childNodes[this.name].id)
-			items.childNodes[this.name].innerHTML = '<img src="/' + items.childNodes[this.name].id + 'img" class="images"></img>'
+			items.childNodes[this.name].innerHTML = '<img src="/img' + items.childNodes[this.name].id + '.png" class="images"></img>'
 		};
 	}
   

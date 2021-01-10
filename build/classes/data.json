@@ -1,26 +1,18 @@
 {
-  "steam2": {
-    "name": "steam2",
-    "location": "dawd"
+  "Steam": {
+    "name": "Steam",
+    "location": "C:\\Users\\User\\lnk\\steamBIG.lnk"
   },
-  "dawwda": {
-    "name": "dawwda",
-    "location": "adwwad"
+  "Test4": {
+    "name": "Test4",
+    "location": "dwa"
   },
-  "dwadaw": {
-    "name": "dwadaw",
-    "location": "adwdw"
+  "Test5": {
+    "name": "Test5",
+    "location": "dwa"
   },
-  "steam": {
-    "name": "steam",
-    "location": "awdawddw"
-  },
-  "dwa": {
-    "name": "dwa",
-    "location": "wad"
-  },
-  "Test": {
-    "name": "Test",
-    "location": "dawdw"
+  "test6": {
+    "name": "test6",
+    "location": "dwaawd"
   }
 }
