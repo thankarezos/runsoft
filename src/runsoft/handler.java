@@ -17,11 +17,13 @@ import java.io.OutputStream;
 public class handler implements HttpHandler{
         private String name;
         private String location;
-        handler(String l,String n){name = n; location =l;}
+        handler(String l,String n){name = n; location =  "\"" + l + "\"";;}
         @Override
         public void handle(HttpExchange t) throws IOException {
             String response = "This is the response";
             System.out.println(name);
+            
+            System.out.println(location);
             t.sendResponseHeaders(200, response.length());
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());

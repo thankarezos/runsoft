@@ -89,13 +89,15 @@ body{
 		height: 250px;
 		scale: 50%;
 		border-radius: 25px;
-		background: #470E03;
+		background: #752D2D;
+		outline: none;
 		 position: fixed;
 		  top: 50%;
 		  left: 50%;
 		  /* bring your own prefixes */
 		  transform: translate(-50%, -50%);
 }
+
 @media only screen and (max-width: 768px) {
   .input {
     width: 70%;
@@ -132,12 +134,17 @@ body{
 .inputbox {
   width: 100%;
   padding: 12px;
-  border: 1px solid black;
+  border: 1px solid #744E4E;
   border-radius: 4px;
   resize: vertical;
   color: white;
-  background: #330C04; 
+  background: #582323; 
   
+}
+.inputbox:focus {
+	outline: none !important;
+    border:1px solid #752D2D;
+    
 }
 .submitbox {
   background-color: #494949;
@@ -505,11 +512,11 @@ function show(){
 	<div id="input" class="input"> 
 		
 		<div style="width: 50%;margin: 0 auto;margin-top: 7%;"><p id="error" style="text-align: center;color: red;"></p></div>
-		<div style="position: fixed;top: 20%;left: 10%; width:70%">
+		<div style="position: fixed;top: 20%;left: 10%; width:77%">
 			<label for="name" style="color:white;">Name</label>
 			<input type="text" id="name" class="inputbox" name="lname" >
 		</div>
-		<div style="position: fixed;top: 50%;left: 10% ;width:70%">
+		<div style="position: fixed;top: 50%;left: 10% ;width:77%">
 			<label for="loc" style="color:white;">Location</label>
 			<input type="text" id="loc" class="inputbox" name="lname" >
 		</div>

@@ -1,10 +1,14 @@
 {
-  "steam": {
-    "name": "steam",
-    "location": "dawdaw"
+  "dawddaw": {
+    "name": "dawddaw",
+    "location": "dwaadw"
   },
   "Steam": {
     "name": "Steam",
-    "location": "adwdwa"
+    "location": "C:\\Users\\User\\lnk\\steamBIG.lnk"
+  },
+  "Battlenet": {
+    "name": "Battlenet",
+    "location": "C:\\Users\\User\\lnk test\\Battle.net.lnk"
   }
 }
