@@ -6,7 +6,6 @@
 package runsoft;
 import com.sun.net.httpserver.BasicAuthenticator;
 import com.sun.net.httpserver.HttpContext;
-import java.io.IOException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,32 +14,15 @@ import java.net.InetSocketAddress;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import java.io.Reader;
 import java.io.FileReader;
-import java.util.Iterator;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
-import java.nio.file.Paths;
-import org.apache.commons.io.FilenameUtils;
 public class Runsoft {
     
     /**
@@ -52,15 +34,16 @@ public class Runsoft {
 
         HttpServer server = server(8000,userpass.getUser(),userpass.getPass());
         HttpContext jsonf = server.createContext("/data.json", new json.jsonhand());
-        HttpContext login = server.createContext("/login", new login.loginHandler(server));
-        HttpContext plus = server.createContext("/plus.ico", new images("src/plus.ico"));
-        
         jsonf.setAuthenticator(new BasicAuthenticator("get") {
             @Override
             public boolean checkCredentials(String user, String pwd) {
                 return user.equals(user) && pwd.equals(userpass.getPass());
             }
         });
+        
+        HttpContext plus = server.createContext("/plus.ico", new images("src/plus.ico"));
+        
+        
         String[] list = new String[100];
         create(server,list);
         HttpContext send = server.createContext("/send", new jsonwrite.jsonhand(server,list));
@@ -91,6 +74,8 @@ public class Runsoft {
         }
        }
     }
+    
+    
     public static void create(HttpServer server,String[] list){
          for (int i = 0;i<list.length;i++){
             try {

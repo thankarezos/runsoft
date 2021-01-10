@@ -205,7 +205,6 @@ body{
 		function editE(itemE){
 			getData(showE,itemE);
 			var save = document.getElementById("saveE")
-			console.log(itemE.target.id)
 			save.onclick = function() { saveE(itemE); } 
 			
 		}
@@ -214,8 +213,22 @@ body{
 		
 		//save edit
 		function saveE(itemE){
-			getData(editC,itemE.target.id)
-			hideE()
+			var name = document.getElementById("nameE").value
+				var loc = document.getElementById("locE").value
+				if (name && loc){
+					if (isASCII(name) && isASCII(loc)){
+						getData(editC,itemE.target.id)
+						hideE()
+						document.getElementById("errorE").innerHTML = ""
+					}
+					else{
+						document.getElementById("errorE").innerHTML = "Invalid Characters"
+					}
+				}
+				else{
+					document.getElementById("errorE").innerHTML = "Fields are empty"
+				}
+			
 		}
 		//send the edit
 		function editC(result,nameS) {
@@ -289,29 +302,23 @@ body{
 
 
 
-
-		
-
-		getData(build)
-
-		function images(result){
-			var json = JSON.parse(result)
-			var jsonKeys = Object.keys(json)
+		//detect images
+		function detect() {
+			var items = document.getElementById("items");
 			
-			for (i = 0; i < jsonKeys.length; i++) {
-				console.log(jsonKeys[i]);
-				detect(jsonKeys[i] + "img", function(result){
-					var items = document.getElementById("items");
-					console.log(items.childNodes[i])
-				  
-				});
-				
+			for (i = 1; i < items.childNodes.length - 1; i++) {
+				var image = new Image();
+				image.name= i
+				image.src =  "img" + items.childNodes[i].id + ".png" ;
+				image.onload = function() {
+				items.childNodes[this.name].innerHTML = '<img src="/img' + items.childNodes[this.name].id + '.png" class="images"></img>'
+				};
 			}
-			
 		}
 
-		//build menu
+		getData(build)
 		
+		//build menu
 		function build(result) {
 		var items = document.getElementById("items");
 		clearA()
@@ -352,21 +359,33 @@ body{
 			
 		}
 		
-		//detect images
-		function detect() {
-			var items = document.getElementById("items");
-			
-			for (i = 1; i < items.childNodes.length - 1; i++) {
-				var image = new Image();
-				image.name= i
-				image.src =  "img" + items.childNodes[i].id + ".png" ;
-				image.onload = function() {
-				items.childNodes[this.name].innerHTML = '<img src="/img' + items.childNodes[this.name].id + '.png" class="images"></img>'
-				};
-			}
+		
+		//hide add menu
+		function hide(){
+			document.getElementById("screen").style.display = "none"
+			document.getElementById("error").innerHTML = ""
+		}
+		//show add menu
+		function show(){
+				
+			document.getElementById("screen").style.display = "block"
+			var name = document.getElementById("name");
+			name.addEventListener("keyup", e => {
+				if (event.keyCode === 13) {
+					document.getElementById("save").click();
+				}
+			});
+			var loc = document.getElementById("loc");
+			loc.addEventListener("keyup", e => {
+				if (event.keyCode === 13) {
+					document.getElementById("save").click();
+				}
+			});
+
 		}
 		
-		//σαωε
+		
+		//save add
 		function save(){
 				var name = document.getElementById("name").value
 				var loc = document.getElementById("loc").value
@@ -384,56 +403,9 @@ body{
 					document.getElementById("error").innerHTML = "Fields are empty"
 				}
 		}
-
-		function clearA(){
-			console.log("test")
-			items.innerHTML = ' ';
-			document.body.appendChild(items)
-		}
-
-		function run(name){
-			console.log(name)
-			
-			$.ajax({
-					url: "/" + name,
-					method: "POST",
-					dataType: "json",
-					crossDomain: true,
-					contentType: "application/json; charset=utf-8",
-					data: JSON.stringify(dataC, null, 2),
-					cache: false,
-					beforeSend: function (xhr) {
-						xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
-					},
-					success: function (data) {
-
-					},
-					error: function (jqXHR, textStatus, errorThrown) {
-
-					}
-				});
-		}
-
-		//function setNL(n,l){
-		//	name = n
-		//	loc=l
-		//	console.log(name,loc)
-		//}
-		function getData(callback,itemE) {
-			var httpRequest = new XMLHttpRequest();
-			httpRequest.onload = function(){ // when the request is loaded
-			   callback(httpRequest.responseText,itemE);// we're calling our method
-			};
-			httpRequest.open('GET', "/data.json");
-			httpRequest.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + pass) ); 
-			httpRequest.send();
-			
-		}
-
-		function isASCII(str) {
-			return /^[\x00-\x7F]*$/.test(str);
-		}
-
+		
+		//send add
+		
 		function add(result) {
 					var name = document.getElementById("name").value
 					var loc = document.getElementById("loc").value
@@ -447,7 +419,6 @@ body{
 										name: name,location: loc ,
 									}
 					}
-					//console.log(dataC)
 					
 					
 					$.ajax({
@@ -470,8 +441,52 @@ body{
 					});
 					getData(build)
 		}
+		
+		//clear menu
+		function clearA(){
+			items.innerHTML = ' ';
+			document.body.appendChild(items)
+		}
+		//run file
+		function run(name){
+			$.ajax({
+					url: "/" + name,
+					method: "POST",
+					dataType: "json",
+					crossDomain: true,
+					contentType: "application/json; charset=utf-8",
+					data: JSON.stringify(dataC, null, 2),
+					cache: false,
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
+					},
+					success: function (data) {
+
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+
+					}
+				});
+		}
+		
+		//get data from server
+		function getData(callback,itemE) {
+			var httpRequest = new XMLHttpRequest();
+			httpRequest.onload = function(){
+			   callback(httpRequest.responseText,itemE);
+			};
+			httpRequest.open('GET', "/data.json");
+			httpRequest.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + pass) ); 
+			httpRequest.send();
+			
+		}
+		//check if String is ASCII
+		function isASCII(str) {
+			return /^[\x00-\x7F]*$/.test(str);
+		}
+
+		//delete item
 		function deleteS(result,name) {
-			console.log(name);
 			dataC = JSON.parse(result)
 			delete dataC[name]
 			$.ajax({
@@ -497,13 +512,12 @@ body{
 		}
 
 
-
+		//delete all (not actively used)
 		function deleteAll(result) {
 			var r = confirm("Are you sure")
 			if (r == true){	
 
 				dataC = {};
-				console.log(dataC)
 				$.ajax({
 					url: "/send",
 					method: "POST",
@@ -526,29 +540,7 @@ body{
 				getData(build)
 			}
 		}
-
-		function hide(){
-			document.getElementById("screen").style.display = "none"
-			document.getElementById("error").innerHTML = ""
-		}
-
-		function show(){
-				
-			document.getElementById("screen").style.display = "block"
-			var name = document.getElementById("name");
-			name.addEventListener("keyup", e => {
-				if (event.keyCode === 13) {
-					document.getElementById("save").click();
-				}
-			});
-			var loc = document.getElementById("loc");
-			loc.addEventListener("keyup", e => {
-				if (event.keyCode === 13) {
-					document.getElementById("save").click();
-				}
-			});
-
-		}
+		
 
 	</script>
 
