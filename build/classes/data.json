@@ -1,18 +1,10 @@
 {
+  "steam": {
+    "name": "steam",
+    "location": "dawdaw"
+  },
   "Steam": {
     "name": "Steam",
-    "location": "C:\\Users\\User\\lnk\\steamBIG.lnk"
-  },
-  "Test4": {
-    "name": "Test4",
-    "location": "dwa"
-  },
-  "Test5": {
-    "name": "Test5",
-    "location": "dwa"
-  },
-  "test6": {
-    "name": "test6",
-    "location": "dwaawd"
+    "location": "adwdwa"
   }
 }

@@ -52,7 +52,7 @@ public class Runsoft {
 
         HttpServer server = server(8000,userpass.getUser(),userpass.getPass());
         HttpContext jsonf = server.createContext("/data.json", new json.jsonhand());
-        HttpContext login = server.createContext("/login", new json.jsonhand());
+        HttpContext login = server.createContext("/login", new login.loginHandler(server));
         HttpContext plus = server.createContext("/plus.ico", new images("src/plus.ico"));
         
         jsonf.setAuthenticator(new BasicAuthenticator("get") {
@@ -182,7 +182,14 @@ public class Runsoft {
             String html = "";
             try {
                 File myObj = new File("src/index.html");
+                html = html +"\n<script>";
+                html = html +"\nvar user = \"" + userpass.getUser() + "\"";
+                html = html +"\nvar pass = \"" + userpass.getPass() + "\"";
+                html = html +"\n</script>";
+                    
+                    
                 try (Scanner myReader = new Scanner(myObj)) {
+                    
                     while (myReader.hasNextLine()) {
                         String data = myReader.nextLine();
                         html = html +"\n" + data;

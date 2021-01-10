@@ -1,0 +1,37 @@
+<html>
+<head>
+<script></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+window.onload = function() {
+   var getInput = prompt("Hey type something here: ");
+   localStorage.setItem("user",getInput);
+   var getInput = prompt("Hey type something here: ");
+   localStorage.setItem("pass",getInput);
+}
+console.log(window.location.origin)
+var url = "http://user:pass6@" + window.location.host;  
+$.ajax(
+      {
+        url : url,
+        type: "POST",
+        data : "test",
+		beforeSend: function (xhr) {
+					xhr.setRequestHeader ("Authorization", "Basic " + btoa("user" + ":" + "pass6"));
+				},
+        success: function() {
+          window.location.href = url; 
+        }
+      });
+
+</script>
+</head>
+<body>
+
+<form action="user:pass5@/" method="POST">
+  <input type="hidden" name="varname" value="var_value">
+    <input type="submit">
+</form>
+</body>
+</html>

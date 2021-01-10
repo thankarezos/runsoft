@@ -11,7 +11,7 @@ package runsoft;
  */
 public class userpass {
     private static String user = "user";
-    private static String pass = "pass5";
+    private static String pass = "pass10";
     
     public static String getUser(){
         return user;
