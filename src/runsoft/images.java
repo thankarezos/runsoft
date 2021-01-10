@@ -17,11 +17,13 @@ import java.nio.file.Files;
  * @author User
  */
 public class images implements HttpHandler {
-        String filename;
-        
+        String path;
+        images (String p){
+            path = p;
+        }
         @Override
         public void handle(HttpExchange arg0) throws IOException {
-            File file = new File("src/plus.ico");
+            File file = new File(path);
             arg0.sendResponseHeaders(200, file.length());
             // TODO set the Content-Type header to image/gif 
 

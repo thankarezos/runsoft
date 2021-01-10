@@ -16,6 +16,13 @@
   font-size: 40px;
   font-weight: bold;
 }
+.images {
+	position: relative;
+	top: 20%;
+	left: 0% ; 
+	width: 100px;
+}
+
 .buttons:hover{
 	background: #744E4E;
 }
@@ -88,7 +95,8 @@ body{
 		  top: 50%;
 		  left: 50%;
 		  /* bring your own prefixes */
-		  transform: translate(-50%, -50%);}
+		  transform: translate(-50%, -50%);
+}
 @media only screen and (max-width: 768px) {
   .input {
     width: 70%;
@@ -102,12 +110,26 @@ body{
 	margin: 0 auto;
 	margin-top: 40px;
 	margin-bottom: 40px;
+	}
+	.buttonsAdd {
+		width: 300px;
+		height: 300px;
+		line-height: 300px;
+		float: none;
+		margin: 0 auto;
+		margin-top: 10px;
+		margin-bottom: 40px;
+	}
+	.images {
+		top: 20%;
+		width: 150px
+	}
+	
 }
 	
   .items {
 		position: relative;
   }
-}
 .inputbox {
   width: 100%;
   padding: 12px;
@@ -149,8 +171,9 @@ body{
 <script>
 
 
-
-
+var user = "user"
+var pass = "pass3"
+var dataC = {};
 
 document.onclick = hideMenu; 
 function hideMenu() { 
@@ -179,12 +202,54 @@ function hideMenu() {
     } 
 
 
-var user = "user"
-var pass = "pass3"
-var dataC = {};
 
+
+
+function detect() {
+	var items = document.getElementById("items");
+	
+	for (i = 1; i < items.childNodes.length - 1; i++) {
+		var image = new Image();
+		image.name= i
+		image.src = items.childNodes[i].id + "img";
+		image.onload = function() {
+			console.log(items.childNodes[this.name].id)
+			items.childNodes[this.name].innerHTML = '<img src="/' + items.childNodes[this.name].id + 'img" class="images"></img>'
+		};
+	}
+  
+	
+			//	items.childNodes[2].innerHTML = '<img src="/' + items.childNodes[2].id + 'img" class="images"></img>'
+
+		
+}
 
 foo(myFunction)
+//foo(images)
+
+function images(result){
+	var json = JSON.parse(result)
+	var jsonKeys = Object.keys(json)
+	
+	for (i = 0; i < jsonKeys.length; i++) {
+		console.log(jsonKeys[i]);
+		detect(jsonKeys[i] + "img", function(result){
+			var items = document.getElementById("items");
+			console.log(items.childNodes[i])
+		  
+		});
+		
+	}
+	
+}
+
+function test(){
+	
+	
+}
+
+
+
 function myFunction(result) {
 	var json = JSON.parse(result)
 	var jsonKeys = Object.keys(json)
@@ -197,12 +262,20 @@ function myFunction(result) {
 	for (i = 0; i < jsonKeys.length; i++) {
 		var btn = document.createElement("DIV");
 		//console.log(jsonKeys[i]);
-		btn.innerHTML = jsonKeys[i]
+		
 		btn.setAttribute("id", jsonKeys[i]);
-
+		
+		
+		
+		
+		
+		
+		
+		
 		btn.setAttribute("class", "buttons noselect");
 		btn.onclick = function() { run(this.id); }
 		btn.oncontextmenu = rightClick; 
+		btn.innerHTML = jsonKeys[i]
 		btn.addEventListener('contextmenu', e => {
 			e.preventDefault();
 			//var r = confirm("Are you sure")
@@ -211,12 +284,17 @@ function myFunction(result) {
 			//}
 		});
 		items.appendChild(btn)
+
 	}
+	
+	
 	var addbtn = document.createElement("DIV");
-	addbtn.innerHTML = '<img src="/plus.png" style="position: relative;top: 20%;left: 0% ;"></img>'
+	addbtn.innerHTML = '<img src="/plus.ico" class="images"></img>'
 	addbtn.setAttribute("class", "buttonsAdd");
 	addbtn.onclick = function() { show(); }
-	 items.appendChild(addbtn)
+	items.appendChild(addbtn)
+	
+	detect()
 	
 }
 function save(){

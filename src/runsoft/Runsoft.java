@@ -40,7 +40,7 @@ import java.util.Iterator;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import java.nio.file.Paths;
-
+import org.apache.commons.io.FilenameUtils;
 public class Runsoft {
 
     /**
@@ -52,7 +52,8 @@ public class Runsoft {
         String pass = "pass3";
         HttpServer server = server(8000,user,pass);
         HttpContext jsonf = server.createContext("/data.json", new json.jsonhand());
-        HttpContext images = server.createContext("/plus", new images());
+        HttpContext plus = server.createContext("/plus.ico", new images("src/plus.ico"));
+        
         jsonf.setAuthenticator(new BasicAuthenticator("get") {
             @Override
             public boolean checkCredentials(String user, String pwd) {
@@ -75,6 +76,21 @@ public class Runsoft {
             } catch (Exception ex) {
             }
         }
+        File folder = new File("src/images");
+        File[] listOfFiles = folder.listFiles();
+        
+        for (int i = 0; i < listOfFiles.length; i++) {
+          if (listOfFiles[i].isFile()) {
+            String fileNameWithOutExt = FilenameUtils.removeExtension(listOfFiles[i].getName());
+            System.out.println(fileNameWithOutExt);
+            
+            HttpContext image = server.createContext("/" + fileNameWithOutExt + "img", new images("src/images/" + listOfFiles[i].getName()));
+          } else if (listOfFiles[i].isDirectory()) {
+            System.out.println("Directory " + listOfFiles[i].getName());
+            
+          }
+        }
+        
 
         
         
