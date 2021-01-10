@@ -1,14 +1,10 @@
 {
-  "dawddaw": {
-    "name": "dawddaw",
-    "location": "dwaadw"
+  "Battlenet": {
+    "name": "Battlenet",
+    "location": "C:\\Users\\User\\lnk test\\Battle.net.lnk"
   },
   "Steam": {
     "name": "Steam",
-    "location": "C:\\Users\\User\\lnk\\steamBIG.lnk"
-  },
-  "Battlenet": {
-    "name": "Battlenet",
-    "location": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Battle.net.lnk"
+    "location": "C:\\Users\\User\\lnk test\\steamBIG.lnk"
   }
 }

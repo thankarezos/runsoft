@@ -173,323 +173,52 @@ body{
 
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		var dataC = {};
 
-<script>
-console.log(test);
-////var user = localStorage.getItem('user');
-//var pass = localStorage.getItem('pass');
+		//right click menu show
 
-var dataC = {};
-//login()
-function login(){
-	 user = window.prompt("sometext","user");
-	 pass = window.prompt("sometext","pass5");
-}
-
-document.onclick = hideMenu; 
-function hideMenu() { 
-        document.getElementById("contextMenu") 
-                .style.display = "none" 
-}
-    
- function editE(itemE){
-	foo(showE,itemE);
-	var save = document.getElementById("saveE")
-	console.log(itemE.target.id)
-	save.onclick = function() { saveE(itemE); } 
-	
-}
-
-    
-
-function saveE(itemE){
-		console.log(itemE.target.id)
-		
-		
-		foo(editC,itemE.target.id)
-		hideE()
-}
-
-
- 
-  
-    function rightClick(e) { 
-        e.preventDefault(); 
-        if (document.getElementById("contextMenu") 
-                .style.display == "block") 
-            hideMenu(); 
-        else{ 
-            var menu = document.getElementById("contextMenu") 
-  
-            menu.style.display = 'block'; 
-            menu.style.left = e.pageX + "px"; 
-            menu.style.top = e.pageY + "px"; 
-			
-        } 
-		var del = document.getElementById("del")
-		del.onclick = function() { foo(deleteS,e.target.id); }
-		var edit = document.getElementById("edit")
-		edit.onclick = function() { editE(e); }
-    } 
-function hideE(){
-	document.getElementById("screenE").style.display = "none"
-	document.getElementById("errorE").innerHTML = ""
-}
-
-function showE(result,itemE){
-	if (result != ""){
-				dataC = JSON.parse(result)
-	}
-	var item = dataC[itemE.target.id]
-	document.getElementById("nameE").value = itemE.target.id
-	document.getElementById("locE").value = item["location"]
-	document.getElementById("screenE").style.display = "block"
-	var name = document.getElementById("nameE");
-	name.addEventListener("keyup", e => {
-		if (event.keyCode === 13) {
-			document.getElementById("saveE").click();
+		function rightClick(e) { 
+			e.preventDefault(); 
+			if (document.getElementById("contextMenu") 
+				.style.display == "block") 
+					hideMenu(); 
+			else{ 
+				var menu = document.getElementById("contextMenu") 
+				menu.style.display = 'block'; 
+				menu.style.left = e.pageX + "px"; 
+				menu.style.top = e.pageY + "px"; 
+					
+			} 
+			var del = document.getElementById("del")
+			del.onclick = function() { getData(deleteS,e.target.id); }
+			var edit = document.getElementById("edit")
+			edit.onclick = function() { editE(e); }
 		}
-	});
-	var loc = document.getElementById("locE");
-	loc.addEventListener("keyup", e => {
-		if (event.keyCode === 13) {
-			document.getElementById("saveE").click();
+		//right click menu
+		document.onclick = hideMenu; 
+		function hideMenu() { 
+				document.getElementById("contextMenu") 
+						.style.display = "none" 
 		}
-	});
-
-}
-
-
-
-
-
-
-
-function detect() {
-	var items = document.getElementById("items");
-	
-	for (i = 1; i < items.childNodes.length - 1; i++) {
-		var image = new Image();
-		image.name= i
-		image.src =  "img" + items.childNodes[i].id + ".png" ;
-		image.onload = function() {
-			//console.log(items.childNodes[this.name].id)
-			items.childNodes[this.name].innerHTML = '<img src="/img' + items.childNodes[this.name].id + '.png" class="images"></img>'
-		};
-	}
-  
-	
-			//	items.childNodes[2].innerHTML = '<img src="/' + items.childNodes[2].id + 'img" class="images"></img>'
-
-		
-}
-
-foo(myFunction)
-//foo(images)
-
-function images(result){
-	var json = JSON.parse(result)
-	var jsonKeys = Object.keys(json)
-	
-	for (i = 0; i < jsonKeys.length; i++) {
-		console.log(jsonKeys[i]);
-		detect(jsonKeys[i] + "img", function(result){
-			var items = document.getElementById("items");
-			console.log(items.childNodes[i])
-		  
-		});
-		
-	}
-	
-}
-
-function test(){
-	
-	
-}
-
-
-
-function myFunction(result) {
-var items = document.getElementById("items");
-clearA()
-	if (result){
-		var json = JSON.parse(result)
-		var jsonKeys = Object.keys(json)
-		
-		
-		
-		var add = document.getElementById("add")
-		
-		var i;
-		for (i = 0; i < jsonKeys.length; i++) {
-			var btn = document.createElement("DIV");
-			//console.log(jsonKeys[i]);
+		//do an edit	
+		function editE(itemE){
+			getData(showE,itemE);
+			var save = document.getElementById("saveE")
+			console.log(itemE.target.id)
+			save.onclick = function() { saveE(itemE); } 
 			
-			btn.setAttribute("id", jsonKeys[i]);
-			
-			
-			
-			
-			
-			
-			
-			
-			btn.setAttribute("class", "buttons noselect");
-			btn.onclick = function() { run(this.id); }
-			btn.oncontextmenu = rightClick; 
-			btn.innerHTML = jsonKeys[i]
-			btn.addEventListener('contextmenu', e => {
-				e.preventDefault();
-				//var r = confirm("Are you sure")
-				//if (r == true){	
-				//	foo(deleteS,btn.id)
-				//}
-			});
-			items.appendChild(btn)
-
 		}
-	}	
-	
-	var addbtn = document.createElement("DIV");
-	addbtn.innerHTML = '<img src="/plus.ico" class="images"></img>'
-	addbtn.setAttribute("class", "buttonsAdd");
-	addbtn.setAttribute("id", "buttons");
-	addbtn.onclick = function() { show(); }
-	items.appendChild(addbtn)
-	
-	detect()
-	
-}
-function save(){
-		var name = document.getElementById("name").value
-		var loc = document.getElementById("loc").value
-		if (name && loc){
-			if (isASCII(name) && isASCII(loc)){
-				foo(add,"name","loc")
-				hide()
-				document.getElementById("error").innerHTML = ""
-			}
-			else{
-				document.getElementById("error").innerHTML = "Invalid Characters"
-			}
-		}
-		else{
-			document.getElementById("error").innerHTML = "Fields are empty"
-		}
-}
 
-function clearA(){
-	console.log("test")
-	items.innerHTML = ' ';
-	document.body.appendChild(items)
-}
 
-function run(name){
-	console.log(name)
-	
-	$.ajax({
-			url: "/" + name,
-			method: "POST",
-			dataType: "json",
-			crossDomain: true,
-			contentType: "application/json; charset=utf-8",
-			data: JSON.stringify(dataC, null, 2),
-			cache: false,
-			beforeSend: function (xhr) {
-				xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
-			},
-			success: function (data) {
-
-			},
-			error: function (jqXHR, textStatus, errorThrown) {
-
-			}
-		});
-}
-
-//function setNL(n,l){
-//	name = n
-//	loc=l
-//	console.log(name,loc)
-//}
-function foo(callback,itemE) {
-    var httpRequest = new XMLHttpRequest();
-    httpRequest.onload = function(){ // when the request is loaded
-       callback(httpRequest.responseText,itemE);// we're calling our method
-    };
-    httpRequest.open('GET', "/data.json");
-	httpRequest.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + pass) ); 
-    httpRequest.send();
-	
-}
-
-function isASCII(str) {
-    return /^[\x00-\x7F]*$/.test(str);
-}
-
-function add(result) {
-			var name = document.getElementById("name").value
-			var loc = document.getElementById("loc").value
-			if (result != ""){
-				dataC = JSON.parse(result)
-			}
-			if(typeof name !== "undefined")
-			{
-				dataC[name] = {
-
-								name: name,location: loc ,
-							}
-			}
-			//console.log(dataC)
-			
-			
-			$.ajax({
-				url: "/send",
-				method: "POST",
-				dataType: "json",
-				crossDomain: true,
-				contentType: "application/json; charset=utf-8",
-				data: JSON.stringify(dataC, null, 2),
-				cache: false,
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
-				},
-				success: function (data) {
-
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-
-				}
-			});
-			foo(myFunction)
-}
-function deleteS(result,name) {
-	console.log(name);
-    dataC = JSON.parse(result)
-	delete dataC[name]
-	$.ajax({
-		url: "/send",
-		method: "POST",
-		dataType: "json",
-		crossDomain: true,
-		contentType: "application/json; charset=utf-8",
-		data: JSON.stringify(dataC, null, 2),
-		cache: false,
-		beforeSend: function (xhr) {
-			xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
-		},
-		success: function (data) {
-
-		},
-		error: function (jqXHR, textStatus, errorThrown) {
-
-		}
 		
-	});
-	foo(myFunction)
-}
-function editC(result,nameS) {
+		//save edit
+		function saveE(itemE){
+			getData(editC,itemE.target.id)
+			hideE()
+		}
+		//send the edit
+		function editC(result,nameS) {
 			var name = document.getElementById("nameE").value
 			var loc = document.getElementById("locE").value
 			if (result != ""){
@@ -499,13 +228,11 @@ function editC(result,nameS) {
 			if(typeof name !== "undefined")
 			{
 				dataC[name] = {
-
-								name: name,location: loc ,
-							}
+					name: name,location: loc ,
+				}
 			}
-			//console.log(dataC)
-			
-			
+					
+					
 			$.ajax({
 				url: "/send",
 				method: "POST",
@@ -524,63 +251,284 @@ function editC(result,nameS) {
 
 				}
 			});
-			foo(myFunction)
-}
+			getData(build)
+		}
 
 
-function deleteAll(result) {
-	var r = confirm("Are you sure")
-	if (r == true){	
-
-		dataC = {};
-		console.log(dataC)
-		$.ajax({
-			url: "/send",
-			method: "POST",
-			dataType: "json",
-			crossDomain: true,
-			contentType: "application/json; charset=utf-8",
-			data: JSON.stringify(dataC, null, 2),
-			cache: false,
-			beforeSend: function (xhr) {
-				xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
-			},
-			success: function (data) {
-
-			},
-			error: function (jqXHR, textStatus, errorThrown) {
-
+		//show edit box
+		function showE(result,itemE){
+			if (result != ""){
+						dataC = JSON.parse(result)
 			}
+			var item = dataC[itemE.target.id]
+			document.getElementById("nameE").value = itemE.target.id
+			document.getElementById("locE").value = item["location"]
+			document.getElementById("screenE").style.display = "block"
+			var name = document.getElementById("nameE");
+			name.addEventListener("keyup", e => {
+				if (event.keyCode === 13) {
+					document.getElementById("saveE").click();
+				}
+			});
+			var loc = document.getElementById("locE");
+			loc.addEventListener("keyup", e => {
+				if (event.keyCode === 13) {
+					document.getElementById("saveE").click();
+				}
+			});
+
+		}
+		//hide edit box
+		function hideE(){
+			document.getElementById("screenE").style.display = "none"
+			document.getElementById("errorE").innerHTML = ""
+		}
+
+
+
+
+
+
+		//detect images
+		function detect() {
+			var items = document.getElementById("items");
 			
-		});
-		foo(myFunction)
-	}
-}
+			for (i = 1; i < items.childNodes.length - 1; i++) {
+				var image = new Image();
+				image.name= i
+				image.src =  "img" + items.childNodes[i].id + ".png" ;
+				image.onload = function() {
+				items.childNodes[this.name].innerHTML = '<img src="/img' + items.childNodes[this.name].id + '.png" class="images"></img>'
+				};
+			}
+		}
 
-function hide(){
-	document.getElementById("screen").style.display = "none"
-	document.getElementById("error").innerHTML = ""
-}
-
-function show(){
+		getData(build)
 		
-	document.getElementById("screen").style.display = "block"
-	var name = document.getElementById("name");
-	name.addEventListener("keyup", e => {
-		if (event.keyCode === 13) {
-			document.getElementById("save").click();
-		}
-	});
-	var loc = document.getElementById("loc");
-	loc.addEventListener("keyup", e => {
-		if (event.keyCode === 13) {
-			document.getElementById("save").click();
-		}
-	});
+		//build menu
+		function build(result) {
+		var items = document.getElementById("items");
+		clearA()
+			if (result){
+				var json = JSON.parse(result)
+				var jsonKeys = Object.keys(json)
+				
+				
+				
+				var add = document.getElementById("add")
+				
+				var i;
+				for (i = 0; i < jsonKeys.length; i++) {
+					var btn = document.createElement("DIV");
+					
+					btn.setAttribute("id", jsonKeys[i]);
+					
+					btn.setAttribute("class", "buttons noselect");
+					btn.onclick = function() { run(this.id); }
+					btn.oncontextmenu = rightClick; 
+					btn.innerHTML = jsonKeys[i]
+					btn.addEventListener('contextmenu', e => {
+						e.preventDefault();
+					});
+					items.appendChild(btn)
 
-}
+				}
+			}	
+			
+			var addbtn = document.createElement("DIV");
+			addbtn.innerHTML = '<img src="/plus.ico" class="images"></img>'
+			addbtn.setAttribute("class", "buttonsAdd");
+			addbtn.setAttribute("id", "buttons");
+			addbtn.onclick = function() { show(); }
+			items.appendChild(addbtn)
+			
+			detect()
+			
+		}
+		function save(){
+				var name = document.getElementById("name").value
+				var loc = document.getElementById("loc").value
+				if (name && loc){
+					if (isASCII(name) && isASCII(loc)){
+						getData(add,"name","loc")
+						hide()
+						document.getElementById("error").innerHTML = ""
+					}
+					else{
+						document.getElementById("error").innerHTML = "Invalid Characters"
+					}
+				}
+				else{
+					document.getElementById("error").innerHTML = "Fields are empty"
+				}
+		}
 
-</script>
+		function clearA(){
+			console.log("test")
+			items.innerHTML = ' ';
+			document.body.appendChild(items)
+		}
+
+		function run(name){
+			console.log(name)
+			
+			$.ajax({
+					url: "/" + name,
+					method: "POST",
+					dataType: "json",
+					crossDomain: true,
+					contentType: "application/json; charset=utf-8",
+					data: JSON.stringify(dataC, null, 2),
+					cache: false,
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
+					},
+					success: function (data) {
+
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+
+					}
+				});
+		}
+
+		//function setNL(n,l){
+		//	name = n
+		//	loc=l
+		//	console.log(name,loc)
+		//}
+		function getData(callback,itemE) {
+			var httpRequest = new XMLHttpRequest();
+			httpRequest.onload = function(){ // when the request is loaded
+			   callback(httpRequest.responseText,itemE);// we're calling our method
+			};
+			httpRequest.open('GET', "/data.json");
+			httpRequest.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + pass) ); 
+			httpRequest.send();
+			
+		}
+
+		function isASCII(str) {
+			return /^[\x00-\x7F]*$/.test(str);
+		}
+
+		function add(result) {
+					var name = document.getElementById("name").value
+					var loc = document.getElementById("loc").value
+					if (result != ""){
+						dataC = JSON.parse(result)
+					}
+					if(typeof name !== "undefined")
+					{
+						dataC[name] = {
+
+										name: name,location: loc ,
+									}
+					}
+					//console.log(dataC)
+					
+					
+					$.ajax({
+						url: "/send",
+						method: "POST",
+						dataType: "json",
+						crossDomain: true,
+						contentType: "application/json; charset=utf-8",
+						data: JSON.stringify(dataC, null, 2),
+						cache: false,
+						beforeSend: function (xhr) {
+							xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
+						},
+						success: function (data) {
+
+						},
+						error: function (jqXHR, textStatus, errorThrown) {
+
+						}
+					});
+					getData(build)
+		}
+		function deleteS(result,name) {
+			console.log(name);
+			dataC = JSON.parse(result)
+			delete dataC[name]
+			$.ajax({
+				url: "/send",
+				method: "POST",
+				dataType: "json",
+				crossDomain: true,
+				contentType: "application/json; charset=utf-8",
+				data: JSON.stringify(dataC, null, 2),
+				cache: false,
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
+				},
+				success: function (data) {
+
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+
+				}
+				
+			});
+			getData(build)
+		}
+
+
+
+		function deleteAll(result) {
+			var r = confirm("Are you sure")
+			if (r == true){	
+
+				dataC = {};
+				console.log(dataC)
+				$.ajax({
+					url: "/send",
+					method: "POST",
+					dataType: "json",
+					crossDomain: true,
+					contentType: "application/json; charset=utf-8",
+					data: JSON.stringify(dataC, null, 2),
+					cache: false,
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader ("Authorization", "Basic " + btoa(user + ":" + pass));
+					},
+					success: function (data) {
+
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+
+					}
+					
+				});
+				getData(build)
+			}
+		}
+
+		function hide(){
+			document.getElementById("screen").style.display = "none"
+			document.getElementById("error").innerHTML = ""
+		}
+
+		function show(){
+				
+			document.getElementById("screen").style.display = "block"
+			var name = document.getElementById("name");
+			name.addEventListener("keyup", e => {
+				if (event.keyCode === 13) {
+					document.getElementById("save").click();
+				}
+			});
+			var loc = document.getElementById("loc");
+			loc.addEventListener("keyup", e => {
+				if (event.keyCode === 13) {
+					document.getElementById("save").click();
+				}
+			});
+
+		}
+
+	</script>
 
 </head>
 <body>
@@ -589,7 +537,7 @@ function show(){
     style="display: none;position:absolute;z-index:500"> 
     <ul> 
         <li id="del"><a  href="#">Delete</a></li> 
-        <li><a id="edit" href="#">Edit</a></li> 
+        <li  id="edit"><a href="#">Edit</a></li> 
     </ul> 
 </div > 
 
