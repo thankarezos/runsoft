@@ -39,7 +39,7 @@ public class jsonwrite {
             String end = sb.toString();
             
             try {
-                    FileWriter myWriter = new FileWriter("src/data.json");
+                    FileWriter myWriter = new FileWriter("resources\\data.json");
                     myWriter.write(end);
                     myWriter.close();
                     System.out.println("Successfully wrote to the file.");

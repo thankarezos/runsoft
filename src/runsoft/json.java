@@ -34,7 +34,7 @@ public class json {
             
             String html = "";
             try {
-                File myObj = new File("src/data.json");
+                File myObj = new File("resources\\data.json");
                 try (Scanner myReader = new Scanner(myObj)) {
                     while (myReader.hasNextLine()) {
                         String data = myReader.nextLine();

@@ -7,10 +7,15 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="runsoft" default="default" basedir=".">
+<project name="runsoft" default="dist" basedir="." >
     <description>Builds, tests, and runs the project runsoft.</description>
     <import file="nbproject/build-impl.xml"/>
+<copy todir="${basedir}/dist/resources">
+    <fileset dir="${basedir}/resources"/>
+</copy>
     <!--
+
+
 
     There exist several targets which are by default empty and which can be 
     used for execution of your tasks. These targets are usually executed 
