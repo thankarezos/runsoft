@@ -24,20 +24,6 @@ import java.io.FileReader;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import java.awt.AWTException;
-import java.awt.Desktop;
-import java.awt.Image;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.InputStream;
-import java.lang.management.ManagementFactory;
-import java.net.InetAddress;
-import java.net.URL;
-import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 public class Runsoft {
     public static String dir = System.getProperty("user.dir");
     /**
@@ -45,70 +31,19 @@ public class Runsoft {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException, AWTException {
-        System.out.println(getIp.ip());
-        InetAddress localhost = InetAddress.getLocalHost(); 
-        if(!SystemTray.isSupported()){
-            System.out.println("System tray is not supported !!! ");
-            return ;
-        }
-        //get the systemTray of the system
-        SystemTray systemTray = SystemTray.getSystemTray();
-
-        //get default toolkit
-        //Toolkit toolkit = Toolkit.getDefaultToolkit();
-        //get image 
-        InputStream input =  Thread.currentThread().getContextClassLoader().getResourceAsStream("icon.png");
-        Image image = ImageIO.read(input);
+        config.getCredentials();
         
-        //popupmenu
-        PopupMenu trayPopupMenu = new PopupMenu();
-
-        //1t menuitem for popupmenu
-        MenuItem action = new MenuItem("Restart");
-        action.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try{
-                    restartApplication(args);
-                }
-                catch (Exception ex){
-                        
-                }
-            }
-        });     
-        trayPopupMenu.add(action);
-
-        //2nd menuitem of popupmenu
-        MenuItem close = new MenuItem("Close");
-        close.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);             
-            }
-        });
-        trayPopupMenu.add(close);
-
-        //setting tray icon
-        TrayIcon trayIcon = new TrayIcon(image, "RunSoft", trayPopupMenu);
-        //adjust to default size as per system recommendation 
-        trayIcon.setImageAutoSize(true);
-
-        try{
-            systemTray.add(trayIcon);
-        }catch(AWTException awtException){
-            awtException.printStackTrace();
-        }
-
-        // directory from where the program was launched
-        // e.g /home/mkyong/projects/core-java/java-io
+        System.out.println(getIp.ip()+":" + config.getPort());
+        tray.Tray(args);
+        
         System.out.println(dir + "\\resources\\data.json");
         
-        HttpServer server = server(8000,userpass.getUser(),userpass.getPass());
+        HttpServer server = server(config.getPort(),config.getUser(),config.getPass());
         HttpContext jsonf = server.createContext("/data.json", new json.jsonhand());
         jsonf.setAuthenticator(new BasicAuthenticator("get") {
             @Override
             public boolean checkCredentials(String user, String pwd) {
-                return user.equals(user) && pwd.equals(userpass.getPass());
+                return user.equals(user) && pwd.equals(config.getPass());
             }
         });
         
@@ -123,7 +58,7 @@ public class Runsoft {
         send.setAuthenticator(new BasicAuthenticator("get") {
             @Override
             public boolean checkCredentials(String user, String pwd) {
-                return user.equals(userpass.getUser()) && pwd.equals(userpass.getPass());
+                return user.equals(config.getUser()) && pwd.equals(config.getPass());
             }
         });for (int i = 0;i<list.length;i++){
             try {
@@ -136,44 +71,11 @@ public class Runsoft {
         reload.images(server);
         Scanner myObj = new Scanner(System.in);
         
-        //openWebpage("http://" + getIp.ip() + "/");
-        for (;;) {
-            String reloadS = myObj.nextLine();
-            System.out.println(reloadS);
-            if(reloadS.equals("r")){
-                System.out.println("reload");
-                restartApplication(args);
-            }
-        }
+        
     }
-public static void infoBox(String infoMessage, String titleBar)
-    {
-        JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
-    }  
-    public static void openWebpage(String urlString) {
-    try {
-        Desktop.getDesktop().browse(new URL(urlString).toURI());
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
     
     
-    public static void restartApplication(String[] args) throws IOException
-    {
-      StringBuilder cmd = new StringBuilder();
-        cmd.append(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java ");
-        for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
-            cmd.append(jvmArg + " ");
-        }
-        cmd.append("-cp ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
-        cmd.append(Runsoft.class.getName()).append(" ");
-        for (String arg : args) {
-            cmd.append(arg).append(" ");
-        }
-        Runtime.getRuntime().exec(cmd.toString());
-        System.exit(0);
-    }
+    
     
     
     public static void create(HttpServer server,String[] list){
@@ -213,7 +115,7 @@ public static void infoBox(String infoMessage, String titleBar)
                 } catch (Exception ex) {
                 }
                 
-                softweres[id] = new software(locS,nameS,userpass.getUser(),userpass.getPass(),server);
+                softweres[id] = new software(locS,nameS,config.getUser(),config.getPass(),server);
                 id++;
             }
             // close reader
@@ -224,6 +126,7 @@ public static void infoBox(String infoMessage, String titleBar)
         }
         
     }
+    
         
  
     
@@ -244,7 +147,7 @@ public static void infoBox(String infoMessage, String titleBar)
             server.start();
             return server;
         }catch (Exception ex){
-            infoBox("Already Opened", "RunSoft");
+            methods.infoBox("Already Opened", "RunSoft");
             System.exit(1); 
             
         }
@@ -262,7 +165,7 @@ public static void infoBox(String infoMessage, String titleBar)
             server.start();
             return server;
         }catch (Exception ex){
-            infoBox("Already Opened", "RunSoft");
+            methods.infoBox("Already Opened", "RunSoft");
             System.exit(1); 
             
         }
@@ -286,8 +189,8 @@ public static void infoBox(String infoMessage, String titleBar)
             try {
                 File myObj = new File(dir +"\\resources\\index.html");
                 html = html +"\n<script>";
-                html = html +"\nvar user = \"" + userpass.getUser() + "\"";
-                html = html +"\nvar pass = \"" + userpass.getPass() + "\"";
+                html = html +"\nvar user = \"" + config.getUser() + "\"";
+                html = html +"\nvar pass = \"" + config.getPass() + "\"";
                 html = html +"\n</script>";
                     
                     

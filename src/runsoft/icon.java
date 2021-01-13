@@ -7,14 +7,12 @@ package runsoft;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import java.awt.Image;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import javax.imageio.ImageIO;
 import static org.apache.commons.io.IOUtils.DEFAULT_BUFFER_SIZE;
 
 /**
